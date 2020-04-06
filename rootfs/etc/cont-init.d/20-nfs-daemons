@@ -1,0 +1,21 @@
+#!/usr/bin/with-contenv bash
+
+echo "Checking if NFS is needed"
+ENABLE_NFS=${ENABLE_NFS:-false}
+ENABLE_NFS=`echo ${ENABLE_NFS} | tr [:upper:] [:lower:]`
+
+if [ "${ENABLE_NFS}"  = "true" ]; then
+
+        echo "Enabling NFS daemons"
+        if [ -e /sbin/rpcbind ]; then
+                echo "Starting RPCBind"
+                /sbin/rpcbind
+        fi
+
+        if [ -e /sbin/rpc.statd ]; then
+                echo "Starting rpc-statd"
+                /sbin/rpc.statd
+        fi
+else
+        echo "Skipping NFS daemons"
+fi

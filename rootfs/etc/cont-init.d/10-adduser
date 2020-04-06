@@ -1,0 +1,32 @@
+#!/usr/bin/with-contenv bash
+
+echo "Checking for abc user"
+PUID=${PUID:-3001}
+PGID=${PGID:-3000}
+
+sed -i 's/^CREATE_MAIL_SPOOL=yes/CREATE_MAIL_SPOOL=no/' /etc/default/useradd
+
+/usr/sbin/addgroup -g ${PGID} abc && \
+/usr/sbin/adduser -D -u ${PUID} -G abc abc
+
+echo "-------------------------------------"
+echo "
+User uid:    $(id -u abc)
+User gid:    $(id -g abc)
+-------------------------------------
+"
+if [ ! -d /app ]; then
+	mkdir /app
+fi
+
+if [ ! -d /config ]; then
+        mkdir /config
+fi
+
+if [ ! -d /defaults ]; then
+        mkdir /defaults
+fi
+
+chown -R abc:abc /app
+chown -R abc:abc /config
+chown -R abc:abc /defaults

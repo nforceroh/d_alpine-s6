@@ -1,0 +1,31 @@
+#!/usr/bin/with-contenv bash
+
+echo "Checking for NFS mounts"
+
+ENABLE_NFS=${ENABLE_NFS:-false}
+ENABLE_NFS=`echo ${ENABLE_NFS} | tr [:upper:] [:lower:]`
+
+function mount_nfs_share {
+
+        V=$1
+        echo "Got ${V}"
+        NFSHOST=$(echo ${V}|cut -f1 -d:)
+        SHAREPATH=$(echo ${V}|cut -f2 -d:)
+        MOUNTPOINT=$(echo ${V}|cut -f3 -d:) 
+
+        echo "Mount ${NFSHOST}:${SHAREPATH} ${MOUNTPOINT}"
+        if [ ! -d ${MOUNTPOINT} ]; then
+                mkdir -p ${MOUNTPOINT}
+                chown -R abc:abc ${MOUNTPOINT}
+        fi
+        mount -t nfs -o nolock,noatime,noacl,nocto,rsize=32768,wsize=32768 ${NFSHOST}:${SHAREPATH} ${MOUNTPOINT}
+}
+
+if [ "${ENABLE_NFS}"  = "true" ]; then
+        echo "NFS Enabled, scanning for NFSSHARE environmentals"
+	for e in `env|grep NFSSHARE|cut -f1 -d=`; do
+		echo "Found ${e}, processing"
+		MOUNTINFO=$(eval "echo \$${e}")
+		mount_nfs_share ${MOUNTINFO}
+	done
+fi
