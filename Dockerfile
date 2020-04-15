@@ -16,8 +16,9 @@ ENV PUID=3001 \
 
 RUN echo "Fetching the basics" \
     && apk update \
+    && apk upgrade \
     && apk add --no-cache rsyslog jq curl bind-tools openssl nfs-utils rpcbind shadow tzdata \
-        ca-certificates coreutils bash git logrotate python3 py3-netifaces \
+        ca-certificates coreutils bash git logrotate python3 \
     && echo "**** install Python ****" \
     && if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi \
     && echo "**** install pip ****" \
@@ -29,8 +30,6 @@ RUN echo "Fetching the basics" \
     && curl -L -s ${OVERLAY_URL} | tar xvzf - -C / \
     && echo "Installing Dockerize" \
     && curl -L -s ${DOCKERIZE_URL} | tar xvzf - -C /usr/local/bin \
-    && echo "Installing Cloudflare python API" \ 
-    && pip3 install cloudflare netifaces \
     && echo "Cleaning up" \
     && apk del --purge \
     && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
