@@ -19,6 +19,8 @@ RUN echo "Fetching the basics" \
     && apk upgrade \
     && apk add --no-cache rsyslog jq curl bind-tools openssl nfs-utils rpcbind shadow tzdata \
         ca-certificates coreutils bash git logrotate python3 \
+    && apk add --virtual build-dependencies \
+        build-base gcc python3-dev linux-headers \
     && echo "**** install Python ****" \
     && if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi \
     && echo "**** install pip ****" \
@@ -30,7 +32,10 @@ RUN echo "Fetching the basics" \
     && curl -L -s ${OVERLAY_URL} | tar xvzf - -C / \
     && echo "Installing Dockerize" \
     && curl -L -s ${DOCKERIZE_URL} | tar xvzf - -C /usr/local/bin \
+    && echo "Installing Cloudflare python API" \ 
+    && pip3 install cloudflare netifaces \
     && echo "Cleaning up" \
+    && apk del build-dependencies \ 
     && apk del --purge \
     && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
     && touch /var/log/messages \
