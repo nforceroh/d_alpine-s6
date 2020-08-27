@@ -3,7 +3,7 @@ FROM alpine:edge
 LABEL maintainer Sylvain Martin (sylvain@nforcer.com)
 
 # s6 overlay
-ARG OVERLAY_VER="v1.22.1.0"
+ARG OVERLAY_VER="v2.0.0.1"
 ARG OVERLAY_URL="https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VER}/s6-overlay-amd64.tar.gz"
 
 # Dockerize
