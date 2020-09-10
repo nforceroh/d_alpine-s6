@@ -6,10 +6,10 @@ IMG_REPO := nforceroh
 DATE_VERSION := $(shell date +"v%Y%m%d" )
 BRANCH := $(shell git branch --show-current)
  
-ifeq ($(BRANCH),master)
+ifeq ($(BRANCH),dev)
 	VERSION := dev
 else
-	VERSION := $(BRANCH)
+	VERSION := edge
 endif
 
 

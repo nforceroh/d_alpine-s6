@@ -15,6 +15,9 @@ ENV PUID=3001 \
     TZ=America/New_York
 
 RUN echo "Fetching the basics" \
+    && echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' > /etc/apk/repositories \
+    && echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories \
+    && echo 'http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories \
     && apk update \
     && apk upgrade \
     && apk add --no-cache rsyslog jq curl bind-tools openssl nfs-utils rpcbind shadow tzdata \
