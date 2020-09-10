@@ -4,8 +4,7 @@ SHELL := /bin/bash
 IMG_NAME := d_alpine-s6
 IMG_REPO := nforceroh
 DATE_VERSION := $(shell date +"v%Y%m%d" )
-BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
-HASH := $(shell git rev-parse HEAD)
+BRANCH := $(shell git branch --show-current)
  
 ifeq ($(BRANCH),master)
 	VERSION := dev
@@ -14,8 +13,13 @@ else
 endif
 
 
-#.PHONY: setupbuild
-all: build push gitcommit gitpush
+.PHONY: context all build push gitcommit gitpush
+all: context build push 
+git: context gitcommit gitpush
+
+context: 
+	@echo "Switching docker context to default"
+	docker context use default
 
 build: 
 	@echo "Building $(IMG_NAME)image"
