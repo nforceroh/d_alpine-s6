@@ -19,18 +19,23 @@ RUN echo "Fetching the basics" \
     && apk upgrade \
     && apk add --no-cache rsyslog jq curl bind-tools openssl nfs-utils rpcbind shadow tzdata \
         ca-certificates coreutils bash git logrotate python3 \
+    && apk add --virtual build-dependencies \
+        build-base gcc python3-dev linux-headers \
     && echo "**** install Python ****" \
     && if [ ! -e /usr/bin/python ]; then ln -sf python3 /usr/bin/python ; fi \
     && echo "**** install pip ****" \
     && python3 -m ensurepip \
     && rm -r /usr/lib/python*/ensurepip \
-    && pip3 install --no-cache --upgrade pip setuptools wheel \
+    && pip3 install --no-cache --upgrade pip setuptools wheel envtpl\
     && if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi \
     && echo "Installing s6 overlay" \
     && curl -L -s ${OVERLAY_URL} | tar xvzf - -C / \
     && echo "Installing Dockerize" \
     && curl -L -s ${DOCKERIZE_URL} | tar xvzf - -C /usr/local/bin \
+    && echo "Installing Cloudflare python API" \ 
+    && pip3 install cloudflare netifaces \
     && echo "Cleaning up" \
+    && apk del build-dependencies \ 
     && apk del --purge \
     && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
     && touch /var/log/messages \
