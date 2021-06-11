@@ -1,5 +1,4 @@
 #!/usr/bin/with-contenv sh
 
 echo "Starting rsyslogd..."
-
 exec rsyslogd -n

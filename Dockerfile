@@ -1,13 +1,25 @@
 FROM alpine:edge
 
-LABEL maintainer Sylvain Martin (sylvain@nforcer.com)
+ARG BUILD_DATE
+ARG VCS_REF
+ARG VERSION
 
-# s6 overlay
-ARG OVERLAY_VER="v2.0.0.1"
-ARG OVERLAY_URL="https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VER}/s6-overlay-amd64.tar.gz"
+LABEL \
+  org.label-schema.build-date=$BUILD_DATE \
+  org.label-schema.name="d_alpine-s6" \
+  org.label-schema.description="alpine linux base image" \
+  org.label-schema.url="https://github.com/nforceroh/d_alpine-s6" \
+  org.label-schema.vcs-ref=$VCS_REF \
+  org.label-schema.vcs-url="https://github.com/nforceroh/d_alpine-s6" \
+  org.label-schema.vendor="nforceroh" \
+  org.label-schema.version=$VERSION \
+  org.label-schema.schema-version="1.0"
 
-# Dockerize
-ARG DOCKERIZE_VER="v0.6.1"
+# s6 overlay and # Dockerize
+
+ARG OVERLAY_VER="v2.2.0.3" 
+ARG OVERLAY_URL="https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VER}/s6-overlay-amd64.tar.gz" 
+ARG DOCKERIZE_VER="v0.6.1" 
 ARG DOCKERIZE_URL="https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VER}/dockerize-alpine-linux-amd64-${DOCKERIZE_VER}.tar.gz"
 
 ENV PUID=3001 \
@@ -29,7 +41,7 @@ RUN echo "Fetching the basics" \
     && echo "**** install pip ****" \
     && python3 -m ensurepip \
     && rm -r /usr/lib/python*/ensurepip \
-    && pip3 install --no-cache --upgrade pip setuptools wheel envtpl\
+    && pip3 install --no-cache --upgrade pip setuptools wheel envtpl \
     && if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi \
     && echo "Installing s6 overlay" \
     && curl -L -s ${OVERLAY_URL} | tar xvzf - -C / \

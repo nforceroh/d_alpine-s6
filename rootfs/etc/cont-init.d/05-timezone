@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv bash
 
+TZ=${TZ:-America/New_York}
+
 if [ -n "${TZ}" ]
 then
     ln -snf "/usr/share/zoneinfo/${TZ}" /etc/localtime
