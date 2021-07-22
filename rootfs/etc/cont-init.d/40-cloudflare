@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-echo "Checking if cloudflare updates are requested"
-/usr/bin/python3 /cloudflare/main.py
