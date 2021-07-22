@@ -3,7 +3,7 @@
 SHELL := /bin/bash
 IMG_NAME := d_alpine-s6
 IMG_REPO := nforceroh
-BUILD_TAG := $(shell date +"v%Y%m%d%H%M%S" )
+BUILD_TAG := $(shell date +"v%Y%m%d%H%M" )
 VERSION := $(shell git rev-parse --short HEAD)
 BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ" )
 BRANCH := $(shell git branch --show-current)
@@ -55,7 +55,7 @@ push:
 ifeq ($(VERSION), dev)
 	docker push $(IMG_REPO)/$(IMG_NAME):dev
 else
-	docker push $(IMG_REPO)/$(IMG_NAME):$(BUILD_TAG)
+#	docker push $(IMG_REPO)/$(IMG_NAME):$(BUILD_TAG)
 	docker push $(IMG_REPO)/$(IMG_NAME):latest
 endif
 
