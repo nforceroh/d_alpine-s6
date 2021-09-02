@@ -25,14 +25,14 @@ context:
 build: 
 	@echo "Building $(IMG_NAME)image"
 ifeq ($(VERSION), dev)
-	docker buildx build --rm . \
+	podman build --squash-all . \
 		--build-arg BUILD_DATE="$(BUILD_DATE)" \
 		--build-arg VCS_REF="$(VERSION)" \
 		--build-arg BASE_IMAGE="alpine:edge" \
 		-t "$(IMG_REPO)/$(IMG_NAME)" \
 		-t "$(IMG_REPO)/$(IMG_NAME):dev" 
 else
-	docker buildx build --rm . \
+	podman build --squash-all . \
 		--build-arg BUILD_DATE="$(BUILD_DATE)" \
 		--build-arg VCS_REF="$(VERSION)" \
 		--build-arg BASE_IMAGE="alpine:edge" \
@@ -52,10 +52,10 @@ gitpush:
 push: 
 	@echo "Building $(IMG_NAME):$(VERSION) image"
 ifeq ($(VERSION), dev)
-	docker push $(IMG_REPO)/$(IMG_NAME):dev
+	podman push $(IMG_REPO)/$(IMG_NAME):dev
 else
-	docker push $(IMG_REPO)/$(IMG_NAME):$(BUILD_TAG)
-	docker push $(IMG_REPO)/$(IMG_NAME):latest
+	podman push $(IMG_REPO)/$(IMG_NAME):$(BUILD_TAG)
+	podman push $(IMG_REPO)/$(IMG_NAME):latest
 endif
 
 end:

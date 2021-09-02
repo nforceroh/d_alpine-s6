@@ -17,21 +17,26 @@ LABEL \
 
 # s6 overlay and # Dockerize
 
-ARG OVERLAY_VER="v2.2.0.3" 
-ARG OVERLAY_URL="https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VER}/s6-overlay-amd64.tar.gz" 
+ENV DOCKERIZE_VER="v0.6.1" \
+    OVERLAY_VER="v2.2.0.3" 
 
 ENV PUID=3001 \
     PGID=3000 \
-    TZ=America/New_York
+    TZ=America/New_York \
+    DOCKERIZE_URL="https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VER/dockerize-alpine-linux-amd64-$DOCKERIZE_VER.tar.gz" \
+    OVERLAY_URL="https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VER}/s6-overlay-amd64.tar.gz" 
+
 
 RUN echo "Fetching the basics" \
-    && echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' > /etc/apk/repositories \
-    && echo 'http://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories \
-    && echo 'http://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories \
-    && apk --update add --no-cache jq curl bind-tools openssl shadow tzdata \
+    && echo 'https://dl-cdn.alpinelinux.org/alpine/edge/main' > /etc/apk/repositories \
+    && echo 'https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories \
+    && echo 'https://dl-cdn.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories \
+    && apk add -U jq curl bind-tools openssl shadow tzdata \
         ca-certificates coreutils bash git \
     && echo "Installing s6 overlay" \
     && curl -L -s ${OVERLAY_URL} | tar xvzf - -C / \
+    && echo "Installing dockerize" \
+    && curl -L -s ${DOCKERIZE_URL} | tar xvzf - -C /usr/local/bin \
     && echo "Cleaning up" \
     && apk del --purge \
     && rm -rf /tmp/* /var/cache/apk/* /usr/src/* 
