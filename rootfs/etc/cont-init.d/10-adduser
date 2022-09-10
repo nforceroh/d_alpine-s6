@@ -1,10 +1,8 @@
-#!/usr/bin/with-contenv bash
+#!/command/with-contenv bash
 
 echo "Checking for abc user"
 PUID=${PUID:-3001}
 PGID=${PGID:-3000}
-
-sed -i 's/^CREATE_MAIL_SPOOL=yes/CREATE_MAIL_SPOOL=no/' /etc/default/useradd
 
 /usr/sbin/addgroup -g ${PGID} abc && \
 /usr/sbin/adduser -D -u ${PUID} -G abc abc
